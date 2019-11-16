@@ -45,23 +45,65 @@ func (c *Cache) Get(key string) interface{} {
 	return nil
 }
 
+func (c *Cache) Delete(key string) {
+	delete(c.cacheMap, key)
+}
+
 func (c *Cache) GetInt(key string) (i int, ok bool) {
 	value := c.Get(key)
-	if i, ok := value.(int); ok {
+	switch i := value.(type) {
+	case int:
 		return i, true
-	} else {
+	case int32:
+		return int(i), true
+	default:
+		return 0, false
+	}
+}
+
+func (c *Cache) GetInt64(key string) (i int64, ok bool) {
+	value := c.Get(key)
+	switch i := value.(type) {
+	case int64:
+		return i, true
+	case int:
+		return int64(i), true
+	case int32:
+		return int64(i), true
+	default:
 		return 0, false
 	}
 }
 
 func (c *Cache) GetFloat(key string) (f float64, ok bool) {
 	value := c.Get(key)
-	if f, ok := value.(float64); ok {
+	switch f := value.(type) {
+	case float64:
 		return f, true
-	} else if f, ok := value.(int); ok {
+	case float32:
 		return float64(f), true
-	} else {
+	case int:
+		return float64(f), true
+	case int64:
+		return float64(f), true
+	case int32:
+		return float64(f), true
+	default:
 		return 0, false
+	}
+}
+
+func (c *Cache) GetFloat64(key string) (f float64, ok bool) {
+	return c.GetFloat(key)
+}
+
+func (c *Cache) GetString(key string) (s string, ok bool) {
+	value := c.Get(key)
+	switch s := value.(type) {
+	case string:
+		return s, true
+	default:
+		return "", false
 	}
 }
 

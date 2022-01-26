@@ -1,4 +1,4 @@
-package cache
+package memory_cache
 
 import (
 	"time"
@@ -14,10 +14,8 @@ type Cache struct {
 
 func (c *Cache) Set(key string, data interface{}, sec ...int) {
 	var expire *time.Time
-	if len(sec) == 1 {
-		t := time.Now()
-		oneSecond, _ := time.ParseDuration("1s")
-		t = t.Add(time.Duration(sec[0]) * oneSecond)
+	if len(sec) == 1 && sec[0] > 0 {
+		t := time.Now().Add(time.Duration(sec[0]) * time.Second)
 		expire = &t
 	}
 
@@ -99,12 +97,14 @@ func (c *Cache) GetFloat64(key string) (f float64, ok bool) {
 
 func (c *Cache) GetString(key string) (s string, ok bool) {
 	value := c.Get(key)
-	switch s := value.(type) {
-	case string:
-		return s, true
-	default:
-		return "", false
-	}
+	s, ok = value.(string)
+	return s, ok
+}
+
+func (c *Cache) GetBool(key string) (b bool, ok bool) {
+	value := c.Get(key)
+	b, ok = value.(bool)
+	return b, ok
 }
 
 type cacheData struct {

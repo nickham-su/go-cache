@@ -1,4 +1,4 @@
-package memory_cache
+package go_cache
 
 import (
 	"time"

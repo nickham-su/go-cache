@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/nickham-su/go-cache"
+	"github.com/nickham-su/go_cache"
 	"time"
 )
 
 func main() {
-	c := memory_cache.New()
+	c := go_cache.New()
 	// Set
 	c.Set("test_float", 1)
 	// GetFloat
